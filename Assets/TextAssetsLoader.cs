@@ -36,7 +36,7 @@ public class TextAssetsLoader : UdonSharpBehaviour
         foreach (string line in lines)
         {
             string[] parts = line.Split(',');
-            kanaToEn.Add(parts[0], parts[1]);
+            kanaToEn.Add(parts[0], parts[1].TrimEnd());
         }
         return kanaToEn;
     }
@@ -51,7 +51,7 @@ public class TextAssetsLoader : UdonSharpBehaviour
             DataList list = new DataList();
             for (int i = 1; i < parts.Length; i++)
             {
-                list.Add(parts[i]);
+                list.Add(parts[i].TrimEnd());
             }
             kanaToRomaji.Add(parts[0], list);
         }
@@ -68,7 +68,7 @@ public class TextAssetsLoader : UdonSharpBehaviour
             DataList list = new DataList();
             for (int i = 1; i < parts.Length; i++)
             {
-                list.Add(parts[i]);
+                list.Add(parts[i].TrimEnd());
             }
             contractedKanaToRomaji.Add(parts[0], list);
         }
@@ -82,7 +82,7 @@ public class TextAssetsLoader : UdonSharpBehaviour
         foreach (string line in lines)
         {
             string[] parts = line.Split(',');
-            wordList.Add(new DataToken((object)Word.New(parts[0], parts[1])));
+            wordList.Add(new DataToken((object)Word.New(parts[0], parts[1].TrimEnd())));
         }
         return wordList;
     }
