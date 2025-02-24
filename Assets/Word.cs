@@ -139,7 +139,7 @@ public static class WordExt
                 {
                     for (int j = 0; j < allRomajis.Count; j++)
                     {
-                        if (allRomajis[j].String[allRomajis[j].String.Length - 1] == YOUON_MARKER)
+                        if (tmpCandidates[i].String[tmpCandidates[i].String.Length - 1] == YOUON_MARKER)
                         {
                             candidates.Add(tmpCandidates[i].String.Substring(0, tmpCandidates[i].String.Length - 1));
                         }
