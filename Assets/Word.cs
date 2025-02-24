@@ -22,6 +22,7 @@ public static class WordExt
     const char EN_START_MARKER = '\\';
     const char EN_END_MARKER = ';';
     const char YOUON_MARKER = '$';
+    const char SOKUON_MARKER = '#';
 
     public static string Original(this Word w)
     {
@@ -84,7 +85,7 @@ public static class WordExt
                     for (int i = 0; i < sokuonRomajis.DataList.Count; i++)
                     {
                         Debug.Log("Found: " + sokuonRomajis.DataList[i].String);
-                        allRomajis.Add(sokuonRomajis.DataList[i].String[0].ToString());
+                        allRomajis.Add(SOKUON_MARKER.ToString());
                     }
                 }
             }
@@ -142,6 +143,10 @@ public static class WordExt
                         if (tmpCandidates[i].String[tmpCandidates[i].String.Length - 1] == YOUON_MARKER)
                         {
                             candidates.Add(tmpCandidates[i].String.Substring(0, tmpCandidates[i].String.Length - 1));
+                        }
+                        else if (tmpCandidates[i].String[tmpCandidates[i].String.Length - 1] == SOKUON_MARKER)
+                        {
+                            candidates.Add(tmpCandidates[i].String.Substring(0, tmpCandidates[i].String.Length - 1) + allRomajis[j].String[0] + allRomajis[j].String);
                         }
                         else
                         {
