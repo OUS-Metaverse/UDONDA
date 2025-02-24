@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f11136daadff0b44ac2278a314682ab, type: 3}
   m_Name: MiniMap
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: af2b2f0b0e8bd0a4f9b5ebec6c56d1dc, type: 2}
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 1ea9311539b3ec94fb89ab7f5b9f7648, type: 2}
   udonAssembly: ".data_start\r\n\r\n    .export captureLayers\r\n    .export miniMapTex\r\n   
     .export maxPlayers\r\n    .export allowToShowOthers\r\n    .export showOthersByDefault\r\n   
     .export playerDotColor\r\n    .export playerDotSize\r\n    .export otherPlayersDotColor\r\n   
