@@ -35,6 +35,7 @@ public static class WordExt
         foreach (char c in kana)
         {
             char next_c = index + 1 < kana.Length ? kana[index + 1] : '\0';
+            char prev_c = index - 1 >= 0 ? kana[index - 1] : '\0';
 
             if (c == EN_START_MARKER)
             {
@@ -74,12 +75,34 @@ public static class WordExt
             {
                 allRomajis.Add("ltu");
                 allRomajis.Add("xtu");
+                allRomajis.Add("ltsu");
+                allRomajis.Add("xtsu");
                 if (textAssetsLoader.kanaMap.TryGetValue(next_c.ToString(), out DataToken sokuonRomajis))
                 {
                     for (int i = 0; i < sokuonRomajis.DataList.Count; i++)
                     {
                         Debug.Log("Found: " + sokuonRomajis.DataList[i].String);
                         allRomajis.Add(sokuonRomajis.DataList[i].String[0].ToString());
+                    }
+                }
+            }
+
+            if (c == 'ん')
+            {
+                allRomajis.Add("nn");
+                allRomajis.Add("xn");
+                allRomajis.Add("n'");
+                if (textAssetsLoader.kanaMap.TryGetValue(next_c.ToString(), out DataToken hatsuonRomajis))
+                {
+                    for (int i = 0; i < hatsuonRomajis.DataList.Count; i++)
+                    {
+                        Debug.Log("Found: " + hatsuonRomajis.DataList[i].String);
+                        char nextRomaji = hatsuonRomajis.DataList[i].String[0];
+                        // "n"は次が子音のときのみ
+                        if (nextRomaji != 'n' && nextRomaji != 'a' && nextRomaji != 'i' && nextRomaji != 'u' && nextRomaji != 'e' && nextRomaji != 'o')
+                        {
+                            allRomajis.Add("n");
+                        }
                     }
                 }
             }
