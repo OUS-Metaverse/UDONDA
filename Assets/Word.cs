@@ -1,4 +1,6 @@
-﻿using UdonSharp;
+﻿using System;
+using System.Linq;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Data;
 
@@ -19,6 +21,7 @@ public static class WordExt
 {
     const char EN_START_MARKER = '\\';
     const char EN_END_MARKER = ';';
+    const char YOUON_MARKER = '$';
 
     public static string Original(this Word w)
     {
@@ -35,7 +38,6 @@ public static class WordExt
         foreach (char c in kana)
         {
             char next_c = index + 1 < kana.Length ? kana[index + 1] : '\0';
-            char prev_c = index - 1 >= 0 ? kana[index - 1] : '\0';
 
             if (c == EN_START_MARKER)
             {
@@ -113,7 +115,7 @@ public static class WordExt
                 {
                     Debug.Log("Found: " + romajis.DataList[i].String);
                 }
-                allRomajis.InsertRange(0, romajis.DataList);
+                allRomajis.AddRange(romajis.DataList);
             }
             
             if (textAssetsLoader.sokuonyouonMap.TryGetValue(new string(new char[] {c, next_c}), out DataToken contractedRomajis))
@@ -121,8 +123,8 @@ public static class WordExt
                 for (int i = 0; i < contractedRomajis.DataList.Count; i++)
                 {
                     Debug.Log("Found: " + contractedRomajis.DataList[i].String);
+                    allRomajis.Add($"{contractedRomajis.DataList[i].String}{YOUON_MARKER}");
                 }
-                allRomajis.InsertRange(0, contractedRomajis.DataList);
             }
 
             DataList tmpCandidates = candidates.DeepClone();
@@ -137,7 +139,14 @@ public static class WordExt
                 {
                     for (int j = 0; j < allRomajis.Count; j++)
                     {
-                        candidates.Add(tmpCandidates[i].String + allRomajis[j].String);
+                        if (allRomajis[j].String[allRomajis[j].String.Length - 1] == YOUON_MARKER)
+                        {
+                            candidates.Add(tmpCandidates[i].String.Substring(0, tmpCandidates[i].String.Length - 1));
+                        }
+                        else
+                        {
+                            candidates.Add(tmpCandidates[i].String + allRomajis[j].String);
+                        }
                     }
                 }
             }
