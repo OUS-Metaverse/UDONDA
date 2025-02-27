@@ -161,7 +161,7 @@ public class TextAssetsLoader : UdonSharpBehaviour
                 // 英単語区間の終了
                 // ローマ字の候補を追加する。
                 engWordFlag = false;
-                romajiTokens[romajiTokens.Count - 1].DataList.Add(engRomajiTokensTmp);
+                romajiTokens[romajiTokens.Count - 1].DataList.Add(engRomajiTokensTmp.DeepClone());
                 tokenIndex++;
                 continue;
             }
