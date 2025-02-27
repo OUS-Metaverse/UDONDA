@@ -1,5 +1,4 @@
-﻿
-using TMPro;
+﻿using TMPro;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Data;
@@ -12,33 +11,171 @@ public class GameManager : UdonSharpBehaviour
     [SerializeField] TMP_Text romajiWord;
     [SerializeField] TextAssetsLoader textAssetsLoader;
 
-    private string inputWord = "";
-    private DataList romajiCandidates;
+    private DataList _word;
 
-    [UdonSynced] private bool gameStarted = false;
-    [UdonSynced, FieldChangeCallback(nameof(wordIndex))] private int _wordIndex;
-    private int wordIndex
+    [UdonSynced] bool gameStarted = false;
+    [UdonSynced, FieldChangeCallback(nameof(WordIndex))] int _wordIndex;
+    int WordIndex
     {
         get => _wordIndex;
         set
         {
             _wordIndex = value;
-            Word word = (Word)textAssetsLoader.wordList[_wordIndex].Reference;
-            originalWord.text = word.Original();
-            romajiCandidates = word.RomajiCandidates(textAssetsLoader);
-            romajiWord.text = romajiCandidates[0].String;
+            _word = textAssetsLoader.wordList[_wordIndex].DataList;
+            originalWord.text = _word[0].String;
+            romajiWord.text = "";
+            for (int i = 0; i < _word[1].DataList.Count; i++)
+            {
+                DataList tokenList = _word[1].DataList[i].DataList;
+                romajiWord.text += tokenList[0].String;
+            }
+        }
+    }
+    [UdonSynced, FieldChangeCallback(nameof(InputWord))] string _inputWord = "";
+    string InputWord
+    {
+        get => _inputWord;
+        set
+        {
+            _inputWord = value;
+
+            bool match = true;
+            string romajiPreview = "";
+            int headIndex = 0;
+            for (int i = 0; i < _word[1].DataList.Count; i++)
+            {
+                // i番目のトークン情報
+                // 0番目は1つ目のローマ字候補か、英単語。英単語の場合は1番目にローマ字候補が入る。
+                DataList tokenInfo = _word[1].DataList[i].DataList;
+                
+                // まだ入力されてないトークン
+                if (headIndex >= _inputWord.Length)
+                {
+                    romajiPreview += tokenInfo[0].String;
+                    continue;
+                }
+
+                // 先頭の候補（英単語区間の場合は英単語）が一致するか
+                if (tokenInfo[0].String.StartsWith(_inputWord.Substring(headIndex, System.Math.Min(tokenInfo[0].String.Length, _inputWord.Length - headIndex))))
+                {
+                    romajiPreview += tokenInfo[0].String;
+                    headIndex += tokenInfo[0].String.Length;
+                    continue;
+                }
+
+                // "nn"と入力した場合の対応
+                if (headIndex > 0 && _inputWord.Substring(headIndex - 1, 2) == "nn" && _inputWord.Substring(headIndex - 2, 1) != "n")
+                {
+                    if (_word[1].DataList[i-1].DataList[0].String == "n")
+                    {
+                        romajiPreview += "n";
+                        headIndex++;
+                        i--;
+                        continue;
+                    }
+                }
+                
+                if (tokenInfo[1].TokenType == TokenType.DataList)
+                {
+                    // 英単語区間
+                    bool match2 = true;
+                    for (int j = 0; j < tokenInfo[1].DataList.Count; j++)
+                    {
+                        // j番目のトークン情報
+                        DataList tokenList = tokenInfo[1].DataList[j].DataList;
+
+                        if (headIndex >= _inputWord.Length)
+                        {
+                            romajiPreview += tokenList[0].String;
+                            continue;
+                        }
+
+                        bool found = false;
+                        for (int k = 0; k < tokenList.Count; k++)
+                        {
+                            DataToken romajis = tokenList[k];
+
+                            if (romajis.String.StartsWith(_inputWord.Substring(headIndex, System.Math.Min(romajis.String.Length, _inputWord.Length - headIndex))))
+                            {
+                                romajiPreview += romajis.String;
+                                headIndex += romajis.String.Length;
+                                found = true;
+                                break;
+                            }
+
+                            // "nn"と入力した場合の対応
+                            if (headIndex > 0 && _inputWord.Substring(headIndex - 1, 2) == "nn" && _inputWord.Substring(headIndex - 2, 1) != "n")
+                            {
+                                if (tokenInfo[1].DataList[j-1].DataList[0].String == "n")
+                                {
+                                    romajiPreview += "n";
+                                    headIndex++;
+                                    k--;
+                                    continue;
+                                }
+                            }
+                        }
+                        if (!found)
+                        {
+                            match2 = false;
+                        }
+                    }
+                    if (match2) continue;
+                }
+                else
+                {
+                    // 通常のかなトークン
+                    bool found = false;
+                    for (int j = 1; j < tokenInfo.Count; j++)
+                    {
+                        DataToken romajis = tokenInfo[j];
+
+                        if (romajis.String.StartsWith(_inputWord.Substring(headIndex, System.Math.Min(romajis.String.Length, _inputWord.Length - headIndex))))
+                        {
+                            romajiPreview += romajis.String;
+                            headIndex += romajis.String.Length;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) continue;
+                }
+
+                match = false;
+                break;
+            }
+
+            if (!match)
+            {
+                _inputWord = _inputWord.Substring(0, _inputWord.Length - 1);
+            }
+            else
+            {
+                if (_inputWord == romajiPreview)
+                {
+                    WordIndex = Random.Range(0, textAssetsLoader.wordList.Count);
+                    _inputWord = "";
+                    RequestSerialization();
+                }
+                else
+                {
+                    if (_inputWord.Length <= romajiPreview.Length)
+                    {
+                        romajiWord.text = "<color=\"red\">" + romajiPreview.Insert(_inputWord.Length, "</color>");
+                    }
+                }
+            }
         }
     }
 
     public void GameStart()
     {
-        if (gameStarted)
+        if (textAssetsLoader.state != LoadingState.Loaded || gameStarted)
         {
             return;
         }
         Networking.SetOwner(Networking.LocalPlayer, gameObject);
-        textAssetsLoader.Load();
-        wordIndex = 62; // Random.Range(0, textAssetsLoader.wordList.Count);
+        WordIndex = Random.Range(0, textAssetsLoader.wordList.Count);
         gameStarted = true;
         RequestSerialization();
     }
@@ -49,24 +186,6 @@ public class GameManager : UdonSharpBehaviour
         {
             return;
         }
-
-        inputWord += c;
-
-        for (int i = 0; i < romajiCandidates.Count; i++)
-        {
-            if (romajiCandidates[i].String == inputWord)
-            {
-                wordIndex = Random.Range(0, textAssetsLoader.wordList.Count);
-                inputWord = "";
-                RequestSerialization();
-                return;
-            }
-            else if (romajiCandidates[i].String.StartsWith(inputWord))
-            {
-                romajiWord.text = "<color=\"red\">" + romajiCandidates[i].String.Insert(inputWord.Length, "</color>");
-                return;
-            }
-        }
-        inputWord = inputWord.Substring(0, inputWord.Length - 1);
+        InputWord += c;
     }
 }
