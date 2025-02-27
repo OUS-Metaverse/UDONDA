@@ -82,23 +82,23 @@ public class GameManager : UdonSharpBehaviour
                     for (int j = 0; j < tokenInfo[1].DataList.Count; j++)
                     {
                         // j番目のトークン情報
-                        DataList tokenList = tokenInfo[1].DataList[j].DataList;
+                        DataList romajis = tokenInfo[1].DataList[j].DataList;
 
                         if (headIndex >= _inputWord.Length)
                         {
-                            romajiPreview += tokenList[0].String;
+                            romajiPreview += romajis[0].String;
                             continue;
                         }
 
                         bool found = false;
-                        for (int k = 0; k < tokenList.Count; k++)
+                        for (int k = 0; k < romajis.Count; k++)
                         {
-                            DataToken romajis = tokenList[k];
+                            DataToken romaji = romajis[k];
 
-                            if (romajis.String.StartsWith(_inputWord.Substring(headIndex, System.Math.Min(romajis.String.Length, _inputWord.Length - headIndex))))
+                            if (romaji.String.StartsWith(_inputWord.Substring(headIndex, System.Math.Min(romaji.String.Length, _inputWord.Length - headIndex))))
                             {
-                                romajiPreview += romajis.String;
-                                headIndex += romajis.String.Length;
+                                romajiPreview += romaji.String;
+                                headIndex += romaji.String.Length;
                                 found = true;
                                 break;
                             }
@@ -128,12 +128,12 @@ public class GameManager : UdonSharpBehaviour
                     bool found = false;
                     for (int j = 1; j < tokenInfo.Count; j++)
                     {
-                        DataToken romajis = tokenInfo[j];
+                        DataToken romaji = tokenInfo[j];
 
-                        if (romajis.String.StartsWith(_inputWord.Substring(headIndex, System.Math.Min(romajis.String.Length, _inputWord.Length - headIndex))))
+                        if (romaji.String.StartsWith(_inputWord.Substring(headIndex, System.Math.Min(romaji.String.Length, _inputWord.Length - headIndex))))
                         {
-                            romajiPreview += romajis.String;
-                            headIndex += romajis.String.Length;
+                            romajiPreview += romaji.String;
+                            headIndex += romaji.String.Length;
                             found = true;
                             break;
                         }
