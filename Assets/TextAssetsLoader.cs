@@ -185,7 +185,8 @@ public class TextAssetsLoader : UdonSharpBehaviour
             else if (kanaToken.String == "ん")
             {
                 // 次の文字がnと結合する音以外の場合は"n"を追加する。
-                if (tokenIndex + 1 < kanaTokens.Count && !"あいうえおなにぬねのん".Contains(kanaTokens[tokenIndex + 1].String[0]))
+                int referenceIndex = kanaTokens[tokenIndex + 1].String == ";" ? tokenIndex + 2 : tokenIndex + 1;
+                if (referenceIndex < kanaTokens.Count && !"あいうえおなにぬねのん".Contains(kanaTokens[referenceIndex].String[0]))
                 {
                     romajiCandidates.Add("n");
                 }
