@@ -79,10 +79,11 @@ public class GameManager : UdonSharpBehaviour
                 {
                     // 英単語区間
                     bool match2 = true;
-                    for (int j = 0; j < tokenInfo[1].DataList.Count; j++)
+                    DataList engTokenInfo = tokenInfo[1].DataList;
+                    for (int j = 0; j < engTokenInfo.Count; j++)
                     {
                         // j番目のトークン情報
-                        DataList romajis = tokenInfo[1].DataList[j].DataList;
+                        DataList romajis = engTokenInfo[j].DataList;
 
                         if (headIndex >= _inputWord.Length)
                         {
@@ -106,7 +107,7 @@ public class GameManager : UdonSharpBehaviour
                             // "nn"と入力した場合の対応
                             if (headIndex > 0 && _inputWord.Substring(headIndex - 1, 2) == "nn" && _inputWord.Substring(headIndex - 2, 1) != "n")
                             {
-                                if (tokenInfo[1].DataList[j-1].DataList[0].String == "n")
+                                if (engTokenInfo[j-1].DataList[0].String == "n")
                                 {
                                     romajiPreview += "n";
                                     headIndex++;
