@@ -22,6 +22,8 @@ public class GameManager : UdonSharpBehaviour
         {
             _wordIndex = value;
             _word = textAssetsLoader.wordList[_wordIndex].DataList;
+            Debug.Log(_word[0].String);
+            Debug.Log(ParseList(_word[1].DataList));
             originalWord.text = _word[0].String;
             romajiWord.text = "";
             for (int i = 0; i < _word[1].DataList.Count; i++)
@@ -188,5 +190,25 @@ public class GameManager : UdonSharpBehaviour
             return;
         }
         InputWord += c;
+    }
+
+    [RecursiveMethod]
+    private string ParseList(DataList list)
+    {
+        string result = "[";
+        for (int i = 0; i < list.Count; i++)
+        {
+            DataToken token = list[i];
+            if (token.TokenType == TokenType.DataList)
+            {
+                result += ParseList(token.DataList);
+            }
+            else
+            {
+                result += "[" + token.String + "],";
+            }
+        }
+        result += "]";
+        return result;
     }
 }
