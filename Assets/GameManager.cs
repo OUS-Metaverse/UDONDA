@@ -208,7 +208,7 @@ public class GameManager : UdonSharpBehaviour
 
     public void OnInputKey(char c)
     {
-        if (!gameStarted)
+        if (!(gameStarted && Networking.IsOwner(gameObject)))
         {
             return;
         }
