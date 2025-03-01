@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Data;
@@ -21,6 +21,10 @@ public class GameManager : UdonSharpBehaviour
         set
         {
             _wordIndex = value;
+            if (textAssetsLoader.state != LoadingState.Loaded)
+            {
+                return;
+            }
             _word = textAssetsLoader.wordList[_wordIndex].DataList;
             Debug.Log(_word[0].String);
             Debug.Log(ParseList(_word[1].DataList));
@@ -40,6 +44,11 @@ public class GameManager : UdonSharpBehaviour
         set
         {
             _inputWord = value;
+
+            if (_word == null)
+            {
+                return;
+            }
 
             bool match = true;
             string romajiPreview = "";
