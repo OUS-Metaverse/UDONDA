@@ -203,37 +203,40 @@ public class TextAssetsLoader : UdonSharpBehaviour
             {
                 DataList romajiCandidatesTmp = new DataList();
                 romajiCandidatesTmp.Capacity = 2;
+                bool firstChar = true;
                 foreach (char c in kanaToken.String)
                 {
                     if (kanaMap.TryGetValue(c.ToString(), out DataToken value))
                     {
-                        int count = 0;
+                        int romajiCandidatesTmpCount = romajiCandidatesTmp.Count;
                         for (int j = 0; j < value.DataList.Count; j++)
                         {
                             string romaji = value.DataList[j].String;
 
-                            if (romajiCandidatesTmp.Count == 0)
+                            if (firstChar)
                             {
+                                // 初回は候補をそのまま追加する。
                                 romajiCandidatesTmp.Add(romaji);
                             }
                             else
                             {
-                                int romajiCandidatesTmpCount = romajiCandidatesTmp.Count;
                                 for (int k = 0; k < romajiCandidatesTmpCount; k++)
                                 {
-                                    if (count == value.DataList.Count - 1)
+                                    if (j == value.DataList.Count - 1)
                                     {
+                                        // 最後のローマ字候補は、既存の候補に追加する。
                                         romajiCandidatesTmp[k] = romajiCandidatesTmp[k].String + romaji;
                                     }
                                     else
                                     {
+                                        // それ以外の場合は、新しい候補を追加する。
                                         romajiCandidatesTmp.Add(romajiCandidatesTmp[k].String + romaji);
                                     }
                                 }
                             }
-                            count++;
                         }
                     }
+                    firstChar = false;
                 }
                 romajiCandidates.AddRange(romajiCandidatesTmp);
             }
