@@ -66,11 +66,18 @@ public class GameManager : UdonSharpBehaviour
                 }
 
                 // "nn"と入力した場合の対応
-                if (headIndex > 0 && _inputWord.Substring(headIndex - 1, 2) == "nn" && _inputWord.Substring(headIndex - 2, 1) != "n")
+                if (headIndex > 0 && (_inputWord.Substring(headIndex - 1, 2) == "nn" || _inputWord.Substring(headIndex - 1, 2) == "n'") && _inputWord.Substring(headIndex - 2, 1) != "n")
                 {
                     if (_word[1].DataList[i-1].DataList[0].String == "n")
                     {
-                        romajiPreview += "n";
+                        if (_inputWord.Substring(headIndex, 1) == "n")
+                        {
+                            romajiPreview += "n";
+                        }
+                        else
+                        {
+                            romajiPreview += "'";
+                        }
                         headIndex++;
                         i--;
                         continue;
@@ -107,11 +114,18 @@ public class GameManager : UdonSharpBehaviour
                             }
 
                             // "nn"と入力した場合の対応
-                            if (headIndex > 0 && _inputWord.Substring(headIndex - 1, 2) == "nn" && _inputWord.Substring(headIndex - 2, 1) != "n")
+                            if (headIndex > 0 && (_inputWord.Substring(headIndex - 1, 2) == "nn" || _inputWord.Substring(headIndex - 1, 2) == "n'") && _inputWord.Substring(headIndex - 2, 1) != "n")
                             {
                                 if (engTokenInfo[j-1].DataList[0].String == "n")
                                 {
-                                    romajiPreview += "n";
+                                    if (_inputWord.Substring(headIndex, 1) == "n")
+                                    {
+                                        romajiPreview += "n";
+                                    }
+                                    else
+                                    {
+                                        romajiPreview += "'";
+                                    }
                                     headIndex++;
                                     k--;
                                     continue;
@@ -190,6 +204,7 @@ public class GameManager : UdonSharpBehaviour
             return;
         }
         InputWord += c;
+        RequestSerialization();
     }
 
     [RecursiveMethod]
