@@ -181,11 +181,13 @@ public class GameManager : UdonSharpBehaviour
 
             if (!match)
             {
+                _inputWord = _inputWord.Substring(0, InputWord.Length - 1);
                 noMissCount = 0;
             }
             else
             {
                 UpdateNoMissCount();
+                if (_inputWord == romajiPreview)
                 {
                     revenue += 100;
                     WordIndex = Random.Range(0, textAssetsLoader.wordList.Count);
