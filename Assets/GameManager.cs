@@ -34,8 +34,6 @@ public class GameManager : UdonSharpBehaviour
                 return;
             }
             _word = textAssetsLoader.wordList[_wordIndex].DataList;
-            Debug.Log(_word[0].String);
-            Debug.Log(ParseList(_word[1].DataList));
             originalWord.text = _word[0].String;
             romajiWord.text = "";
             for (int i = 0; i < _word[1].DataList.Count; i++)
@@ -45,6 +43,7 @@ public class GameManager : UdonSharpBehaviour
             }
         }
     }
+    
     [UdonSynced, FieldChangeCallback(nameof(InputWord))] string _inputWord = "";
     string InputWord
     {
@@ -264,4 +263,24 @@ public class GameManager : UdonSharpBehaviour
             noMissCount = 0;
         }
     }
+
+    // [RecursiveMethod]
+    // private string ParseList(DataList list)
+    // {
+    //     string result = "[";
+    //     for (int i = 0; i < list.Count; i++)
+    //     {
+    //         DataToken token = list[i];
+    //         if (token.TokenType == TokenType.DataList)
+    //         {
+    //             result += ParseList(token.DataList);
+    //         }
+    //         else
+    //         {
+    //             result += "[" + token.String + "],";
+    //         }
+    //     }
+    //     result += "]";
+    //     return result;
+    // }
 }
