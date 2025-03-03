@@ -7,13 +7,21 @@ using VRC.SDKBase;
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class GameManager : UdonSharpBehaviour
 {
+    [SerializeField] TMP_Text remainingTime;
     [SerializeField] TMP_Text originalWord;
     [SerializeField] TMP_Text romajiWord;
     [SerializeField] TextAssetsLoader textAssetsLoader;
 
     private DataList _word;
 
-    [UdonSynced] bool gameStarted = false;
+    [UdonSynced] long gameStartTime;
+    [UdonSynced] int limitTime = 60;
+
+    [UdonSynced] int revenue = -10000;
+
+    int noMissCount = 0;
+
+    DataList _word;
     [UdonSynced, FieldChangeCallback(nameof(WordIndex))] int _wordIndex;
     int WordIndex
     {
@@ -173,12 +181,13 @@ public class GameManager : UdonSharpBehaviour
 
             if (!match)
             {
-                _inputWord = _inputWord.Substring(0, _inputWord.Length - 1);
+                noMissCount = 0;
             }
             else
             {
-                if (_inputWord == romajiPreview)
+                UpdateNoMissCount();
                 {
+                    revenue += 100;
                     WordIndex = Random.Range(0, textAssetsLoader.wordList.Count);
                     _inputWord = "";
                     RequestSerialization();
@@ -196,43 +205,61 @@ public class GameManager : UdonSharpBehaviour
 
     public void GameStart()
     {
-        if (textAssetsLoader.state != LoadingState.Loaded || gameStarted)
-        {
+        if (textAssetsLoader.state != LoadingState.Loaded || gameStartTime != 0)
             return;
-        }
+            
         Networking.SetOwner(Networking.LocalPlayer, gameObject);
         WordIndex = Random.Range(0, textAssetsLoader.wordList.Count);
-        gameStarted = true;
+        gameStartTime = System.DateTime.Now.ToBinary();
         RequestSerialization();
     }
 
     public void OnInputKey(char c)
     {
-        if (!(gameStarted && Networking.IsOwner(gameObject)))
-        {
+        if (!(gameStartTime != 0 && Networking.IsOwner(gameObject)))
             return;
-        }
+
         InputWord += c;
         RequestSerialization();
     }
 
-    [RecursiveMethod]
-    private string ParseList(DataList list)
+    void Update()
     {
-        string result = "[";
-        for (int i = 0; i < list.Count; i++)
+        if (gameStartTime == 0)
+            return;
+        
+        int remaining = (int)(System.DateTime.FromBinary(gameStartTime) - System.DateTime.Now).TotalSeconds + limitTime;
+        remainingTime.text = "残り時間 " + remaining + "秒";
+        if (remaining <= 0)
         {
-            DataToken token = list[i];
-            if (token.TokenType == TokenType.DataList)
-            {
-                result += ParseList(token.DataList);
+            gameStartTime = 0;
+            remainingTime.text = "終了！";
+            originalWord.text = "今日の収入: " + revenue + "円";
+            romajiWord.text = "";
             }
             else
             {
-                result += "[" + token.String + "],";
-            }
+            revenue = -10000;
+            noMissCount = 0;
+            limitTime = 60;
         }
-        result += "]";
-        return result;
+    }
+
+    private void UpdateNoMissCount()
+    {
+        noMissCount++;
+        if (noMissCount == 10)
+        {
+            limitTime += 1;
+        }
+        else if (noMissCount == 20)
+        {
+            limitTime += 2;
+        }
+        else if (noMissCount == 30)
+        {
+            limitTime += 3;
+            noMissCount = 0;
+        }
     }
 }
