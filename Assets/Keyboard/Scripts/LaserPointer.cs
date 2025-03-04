@@ -11,7 +11,7 @@ enum TrackingTarget
 }
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-public class UIBeamCaster : UdonSharpBehaviour
+public class LaserPointer : UdonSharpBehaviour
 {
     [SerializeField] private LayerMask collideLayer;
     [SerializeField] private LayerMask layerMask;
@@ -109,3 +109,4 @@ public class UIBeamCaster : UdonSharpBehaviour
         }
     }
 }
+

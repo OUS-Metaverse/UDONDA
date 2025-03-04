@@ -12,7 +12,8 @@ public class GameManager : UdonSharpBehaviour
     [SerializeField] TMP_Text romajiWord;
     [SerializeField] TMP_Text leaderboard;
     [SerializeField] TextAssetsLoader textAssetsLoader;
-    [SerializeField] AudioSource audioSource;    [SerializeField] GameObject laserPointerL, laserPointerR;
+    [SerializeField] GameObject laserPointerL, laserPointerR;
+    [SerializeField] AudioSource audioSource;
 
     
     [Header("Audio Clips")]
@@ -284,7 +285,11 @@ public class GameManager : UdonSharpBehaviour
             remainingTime.text = "終了！";
             originalWord.text = "今日の収入: " + revenue + "円";
             romajiWord.text = "";
-
+            if (Networking.GetOwner(gameObject) == Networking.LocalPlayer)
+            {
+                laserPointerL.SetActive(false);
+                laserPointerR.SetActive(false);
+            }
             DataList score = new DataList();
             score.Capacity = 2;
             score.Add(new DataToken(Networking.LocalPlayer.displayName));

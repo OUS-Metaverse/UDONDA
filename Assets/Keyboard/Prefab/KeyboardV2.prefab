@@ -3121,8 +3121,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3933276509227485945}
-  - component: {fileID: 2135716963819474709}
-  - component: {fileID: 4737864809601089394}
+  - component: {fileID: 4170223402762644285}
+  - component: {fileID: 6615952064584509092}
   - component: {fileID: 3134554806065011327}
   m_Layer: 0
   m_Name: L
@@ -3147,7 +3147,7 @@ Transform:
   - {fileID: 1624202746876567302}
   m_Father: {fileID: 1492056438915103444}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2135716963819474709
+--- !u!114 &4170223402762644285
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3156,7 +3156,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1106682397872095346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47920bc1fcf42bc45bee62bbaa06c71c, type: 3}
+  m_Script: {fileID: 11500000, guid: 00f7dc9d6a418fb4fa2a6644dd5752d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
@@ -3168,20 +3168,20 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  _udonSharpBackingUdonBehaviour: {fileID: 4737864809601089394}
+  _udonSharpBackingUdonBehaviour: {fileID: 6615952064584509092}
   collideLayer:
     serializedVersion: 2
     m_Bits: 12582912
   layerMask:
     serializedVersion: 2
     m_Bits: 4194304
-  keyboard: {fileID: 5099369277796447945}
+  keyboard: {fileID: 0}
   gameManager: {fileID: 0}
   _trackingTarget: 0
   _spaceOffset: 0.05
   _RotationOffset: 40
   _debug: 0
---- !u!114 &4737864809601089394
+--- !u!114 &6615952064584509092
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3200,9 +3200,9 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 1
-  serializedProgramAsset: {fileID: 11400000, guid: 8c3129103996a1047ae45585e60b17a6, type: 2}
-  programSource: {fileID: 11400000, guid: 2e15ca5c6b9b22946b72fe740eb716af, type: 2}
+  _syncMethod: 0
+  serializedProgramAsset: {fileID: 11400000, guid: f8d654b569c245e408a45fa0b59f6257, type: 2}
+  programSource: {fileID: 11400000, guid: 6ebc238c3a36c6c469522f4a41766130, type: 2}
   serializedPublicVariablesBytesString: Ai8AAAAAATIAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAFQAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AAAAAAAYBAAAAAAAAACcBBAAAAHQAeQBwAGUAAWgAAABTAHkAcwB0AGUAbQAuAEMAbwBsAGwAZQBjAHQAaQBvAG4AcwAuAEcAZQBuAGUAcgBpAGMALgBMAGkAcwB0AGAAMQBbAFsAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4ALgBJAG4AdABlAHIAZgBhAGMAZQBzAC4ASQBVAGQAbwBuAFYAYQByAGkAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AXQBdACwAIABtAHMAYwBvAHIAbABpAGIAAQEJAAAAVgBhAHIAaQBhAGIAbABlAHMALwEAAAABaAAAAFMAeQBzAHQAZQBtAC4AQwBvAGwAbABlAGMAdABpAG8AbgBzAC4ARwBlAG4AZQByAGkAYwAuAEwAaQBzAHQAYAAxAFsAWwBWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAEkAbgB0AGUAcgBmAGEAYwBlAHMALgBJAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlACwAIABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgBdAF0ALAAgAG0AcwBjAG8AcgBsAGkAYgABAAAABgEAAAAAAAAAAi8CAAAAAUkAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAGAAMQBbAFsAUwB5AHMAdABlAG0ALgBJAG4AdAAzADIALAAgAG0AcwBjAG8AcgBsAGkAYgBdAF0ALAAgAFYAUgBDAC4AVQBkAG8AbgAuAEMAbwBtAG0AbwBuAAIAAAAGAgAAAAAAAAAnAQQAAAB0AHkAcABlAAEXAAAAUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwAsACAAbQBzAGMAbwByAGwAaQBiACcBCgAAAFMAeQBtAGIAbwBsAE4AYQBtAGUAAR8AAABfAF8AXwBVAGQAbwBuAFMAaABhAHIAcABCAGUAaABhAHYAaQBvAHUAcgBWAGUAcgBzAGkAbwBuAF8AXwBfACcBBAAAAHQAeQBwAGUAARYAAABTAHkAcwB0AGUAbQAuAEkAbgB0ADMAMgAsACAAbQBzAGMAbwByAGwAaQBiABcBBQAAAFYAYQBsAHUAZQACAAAABwUHBQcF
   publicVariablesUnityEngineObjects: []
   publicVariablesSerializationDataFormat: 0
@@ -3227,7 +3227,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0e3d683a56d5c8d49952b9d4b056bfe2, type: 2}
+  - {fileID: 2100000, guid: 2653279a8c805764884cd2678b92f26b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17047,8 +17047,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 427951286725542235}
-  - component: {fileID: 426153985343688950}
-  - component: {fileID: 3668997805735465295}
+  - component: {fileID: 5902089380470415302}
+  - component: {fileID: 301305439923897044}
   - component: {fileID: 8770048086949582628}
   m_Layer: 0
   m_Name: R
@@ -17073,7 +17073,7 @@ Transform:
   - {fileID: 643852320577165832}
   m_Father: {fileID: 1492056438915103444}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &426153985343688950
+--- !u!114 &5902089380470415302
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -17082,7 +17082,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4731532617285776477}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47920bc1fcf42bc45bee62bbaa06c71c, type: 3}
+  m_Script: {fileID: 11500000, guid: 00f7dc9d6a418fb4fa2a6644dd5752d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
@@ -17094,20 +17094,20 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  _udonSharpBackingUdonBehaviour: {fileID: 3668997805735465295}
+  _udonSharpBackingUdonBehaviour: {fileID: 301305439923897044}
   collideLayer:
     serializedVersion: 2
     m_Bits: 12582912
   layerMask:
     serializedVersion: 2
     m_Bits: 4194304
-  keyboard: {fileID: 5099369277796447945}
+  keyboard: {fileID: 0}
   gameManager: {fileID: 0}
   _trackingTarget: 1
   _spaceOffset: 0.05
   _RotationOffset: 40
   _debug: 0
---- !u!114 &3668997805735465295
+--- !u!114 &301305439923897044
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -17126,9 +17126,9 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 1
-  serializedProgramAsset: {fileID: 11400000, guid: 8c3129103996a1047ae45585e60b17a6, type: 2}
-  programSource: {fileID: 11400000, guid: 2e15ca5c6b9b22946b72fe740eb716af, type: 2}
+  _syncMethod: 0
+  serializedProgramAsset: {fileID: 11400000, guid: f8d654b569c245e408a45fa0b59f6257, type: 2}
+  programSource: {fileID: 11400000, guid: 6ebc238c3a36c6c469522f4a41766130, type: 2}
   serializedPublicVariablesBytesString: Ai8AAAAAATIAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAFQAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AAAAAAAYBAAAAAAAAACcBBAAAAHQAeQBwAGUAAWgAAABTAHkAcwB0AGUAbQAuAEMAbwBsAGwAZQBjAHQAaQBvAG4AcwAuAEcAZQBuAGUAcgBpAGMALgBMAGkAcwB0AGAAMQBbAFsAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4ALgBJAG4AdABlAHIAZgBhAGMAZQBzAC4ASQBVAGQAbwBuAFYAYQByAGkAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AXQBdACwAIABtAHMAYwBvAHIAbABpAGIAAQEJAAAAVgBhAHIAaQBhAGIAbABlAHMALwEAAAABaAAAAFMAeQBzAHQAZQBtAC4AQwBvAGwAbABlAGMAdABpAG8AbgBzAC4ARwBlAG4AZQByAGkAYwAuAEwAaQBzAHQAYAAxAFsAWwBWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAEkAbgB0AGUAcgBmAGEAYwBlAHMALgBJAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlACwAIABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgBdAF0ALAAgAG0AcwBjAG8AcgBsAGkAYgABAAAABgEAAAAAAAAAAi8CAAAAAUkAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAGAAMQBbAFsAUwB5AHMAdABlAG0ALgBJAG4AdAAzADIALAAgAG0AcwBjAG8AcgBsAGkAYgBdAF0ALAAgAFYAUgBDAC4AVQBkAG8AbgAuAEMAbwBtAG0AbwBuAAIAAAAGAgAAAAAAAAAnAQQAAAB0AHkAcABlAAEXAAAAUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwAsACAAbQBzAGMAbwByAGwAaQBiACcBCgAAAFMAeQBtAGIAbwBsAE4AYQBtAGUAAR8AAABfAF8AXwBVAGQAbwBuAFMAaABhAHIAcABCAGUAaABhAHYAaQBvAHUAcgBWAGUAcgBzAGkAbwBuAF8AXwBfACcBBAAAAHQAeQBwAGUAARYAAABTAHkAcwB0AGUAbQAuAEkAbgB0ADMAMgAsACAAbQBzAGMAbwByAGwAaQBiABcBBQAAAFYAYQBsAHUAZQACAAAABwUHBQcF
   publicVariablesUnityEngineObjects: []
   publicVariablesSerializationDataFormat: 0
@@ -17153,7 +17153,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0e3d683a56d5c8d49952b9d4b056bfe2, type: 2}
+  - {fileID: 2100000, guid: 2653279a8c805764884cd2678b92f26b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

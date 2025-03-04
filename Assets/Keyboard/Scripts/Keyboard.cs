@@ -2,6 +2,8 @@
 using UdonSharp;
 using UnityEngine;
 
+[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+
 public class Keyboard : UdonSharpBehaviour
 {
     [SerializeField] private GameObject keyboard1;
