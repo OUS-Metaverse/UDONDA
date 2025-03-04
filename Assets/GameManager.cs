@@ -10,6 +10,7 @@ public class GameManager : UdonSharpBehaviour
     [SerializeField] TMP_Text originalWord;
     [SerializeField] TMP_Text romajiWord;
     [SerializeField] TextAssetsLoader textAssetsLoader;
+    [SerializeField] GameObject laserPointerL, laserPointerR;
 
     private DataList _word;
 
@@ -193,6 +194,11 @@ public class GameManager : UdonSharpBehaviour
         }
         Networking.SetOwner(Networking.LocalPlayer, gameObject);
         WordIndex = Random.Range(0, textAssetsLoader.wordList.Count);
+        if (Networking.LocalPlayer.IsUserInVR())
+        {
+            laserPointerL.SetActive(true);
+            laserPointerR.SetActive(true);
+        }
         gameStarted = true;
         RequestSerialization();
     }
