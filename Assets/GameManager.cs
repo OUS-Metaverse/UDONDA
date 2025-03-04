@@ -12,7 +12,8 @@ public class GameManager : UdonSharpBehaviour
     [SerializeField] TMP_Text romajiWord;
     [SerializeField] TMP_Text leaderboard;
     [SerializeField] TextAssetsLoader textAssetsLoader;
-    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioSource audioSource;    [SerializeField] GameObject laserPointerL, laserPointerR;
+
     
     [Header("Audio Clips")]
     [SerializeField] AudioClip keyStrokeSound;
@@ -246,6 +247,11 @@ public class GameManager : UdonSharpBehaviour
             
         Networking.SetOwner(Networking.LocalPlayer, gameObject);
         WordIndex = Random.Range(0, textAssetsLoader.wordList.Count);
+        if (Networking.LocalPlayer.IsUserInVR())
+        {
+            laserPointerL.SetActive(true);
+            laserPointerR.SetActive(true);
+        }
         gameStartTime = System.DateTime.Now.ToBinary();
         RequestSerialization();
 
