@@ -1,4 +1,5 @@
-﻿using UdonSharp;
+﻿using System;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Data;
 
@@ -30,14 +31,14 @@ public class TextAssetsLoader : UdonSharpBehaviour
     /// <remarks>
     /// 英単語をキー、対応するかなを値とする。
     /// </remarks>
-    public DataDictionary engWordMap;
+    [NonSerialized] public DataDictionary engWordMap = new DataDictionary();
     /// <summary>
     /// かなローマ字対応マップ
     /// </summary>
     /// <remarks>
     /// かなをキー、対応するローマ字のリストを値とする。
     /// </remarks>
-    public DataDictionary kanaMap;
+    [NonSerialized] public DataDictionary kanaMap = new DataDictionary();
     /// <summary>
     /// ワードリスト
     /// </summary>
@@ -54,7 +55,7 @@ public class TextAssetsLoader : UdonSharpBehaviour
     /// [1]: ローマ字の候補リスト
     /// </code>
     /// </remarks>
-    public DataList wordList;
+    [NonSerialized] public DataList wordList = new DataList();
 
     public float progress = 0.0f;
     public LoadingState state = LoadingState.NotLoaded;
@@ -148,11 +149,17 @@ public class TextAssetsLoader : UdonSharpBehaviour
                 {
                     word += kanaTokens[j].String;
                 }
-                engWordMap.TryGetValue(word, out DataToken enWord);
-                DataList engTokens = new DataList();
-                engTokens.Capacity = 2;
-                engTokens.Add(enWord.String);
-                romajiTokens.Add(engTokens);
+                if (engWordMap.TryGetValue(word, out DataToken enWord))
+                {
+                    DataList engTokens = new DataList();
+                    engTokens.Capacity = 2;
+                    engTokens.Add(enWord.String);
+                    romajiTokens.Add(engTokens);
+                }
+                else
+                {
+                    Debug.LogWarning($"英単語が見つかりません: {word}");
+                }
                 tokenIndex++;
                 continue;
             }
