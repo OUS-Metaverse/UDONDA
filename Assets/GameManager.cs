@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Data;
@@ -10,6 +10,7 @@ public class GameManager : UdonSharpBehaviour
     [SerializeField] TMP_Text remainingTime;
     [SerializeField] TMP_Text originalWord;
     [SerializeField] TMP_Text romajiWord;
+    [SerializeField] TMP_Text leaderboard;
     [SerializeField] TextAssetsLoader textAssetsLoader;
     [SerializeField] AudioSource audioSource;
     
@@ -20,6 +21,27 @@ public class GameManager : UdonSharpBehaviour
     [SerializeField] AudioClip extendTimeSound;
     [SerializeField] AudioClip gameStartSound;
     [SerializeField] AudioClip gameEndSound;
+
+    [UdonSynced, FieldChangeCallback(nameof(LeaderboardData))] string _leaderboardData;
+    string LeaderboardData
+    {
+        get => _leaderboardData;
+        set
+        {
+            _leaderboardData = value;
+            if (VRCJson.TryDeserializeFromJson(_leaderboardData, out DataToken result))
+            {
+                DataList leaderboardData = result.DataList;
+
+                leaderboard.text = "";
+                for (int i = 0; i < leaderboardData.Count; i++)
+                {
+                    DataList data = leaderboardData[i].DataList;
+                    leaderboard.text += i + 1 + ". " + data[0] + " " + data[1] + "円\n";
+                }
+            }
+        }
+    }
 
     [UdonSynced] long gameStartTime;
     [UdonSynced] int limitTime = 60;
@@ -256,9 +278,46 @@ public class GameManager : UdonSharpBehaviour
             remainingTime.text = "終了！";
             originalWord.text = "今日の収入: " + revenue + "円";
             romajiWord.text = "";
+
+            DataList score = new DataList();
+            score.Capacity = 2;
+            score.Add(new DataToken(Networking.LocalPlayer.displayName));
+            score.Add(new DataToken(revenue));
+
+            if (VRCJson.TryDeserializeFromJson(LeaderboardData, out DataToken result))
+            {
+                DataList leaderboardData = result.DataList;
+                for (int i = 0; i < leaderboardData.Count; i++)
+                {
+                    DataList data = leaderboardData[i].DataList;
+                    if (data[1].Double < revenue)
+                    {
+                        leaderboardData.Insert(i, score);
+                        break;
+                    }
+                }
+                if (leaderboardData.Count > 10)
+                {
+                    leaderboardData.RemoveAt(0);
+                }
+                
+                if (VRCJson.TrySerializeToJson(leaderboardData, JsonExportType.Minify, out DataToken json))
+                {
+                    LeaderboardData = json.String;
+                    RequestSerialization();
+                }
             }
             else
             {
+                DataList leaderboardData = new DataList();
+                leaderboardData.Add(score);
+                if (VRCJson.TrySerializeToJson(leaderboardData, JsonExportType.Minify, out DataToken json))
+                {
+                    LeaderboardData = json.String;
+                }
+                RequestSerialization();
+            }
+
             revenue = -10000;
         }
     }
