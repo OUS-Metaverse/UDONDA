@@ -11,8 +11,15 @@ public class GameManager : UdonSharpBehaviour
     [SerializeField] TMP_Text originalWord;
     [SerializeField] TMP_Text romajiWord;
     [SerializeField] TextAssetsLoader textAssetsLoader;
-
-    private DataList _word;
+    [SerializeField] AudioSource audioSource;
+    
+    [Header("Audio Clips")]
+    [SerializeField] AudioClip keyStrokeSound;
+    [SerializeField] AudioClip missSound;
+    [SerializeField] AudioClip correctSound;
+    [SerializeField] AudioClip extendTimeSound;
+    [SerializeField] AudioClip gameStartSound;
+    [SerializeField] AudioClip gameEndSound;
 
     [UdonSynced] long gameStartTime;
     [UdonSynced] int limitTime = 60;
@@ -182,6 +189,8 @@ public class GameManager : UdonSharpBehaviour
             {
                 _inputWord = _inputWord.Substring(0, InputWord.Length - 1);
                 noMissCount = 0;
+
+                audioSource.PlayOneShot(missSound);
             }
             else
             {
@@ -192,6 +201,8 @@ public class GameManager : UdonSharpBehaviour
                     WordIndex = Random.Range(0, textAssetsLoader.wordList.Count);
                     _inputWord = "";
                     RequestSerialization();
+
+                    audioSource.PlayOneShot(correctSound);
                 }
                 else
                 {
@@ -199,6 +210,8 @@ public class GameManager : UdonSharpBehaviour
                     {
                         romajiWord.text = "<color=\"red\">" + romajiPreview.Insert(_inputWord.Length, "</color>");
                     }
+
+                    audioSource.PlayOneShot(keyStrokeSound);
                 }
             }
         }
@@ -213,6 +226,8 @@ public class GameManager : UdonSharpBehaviour
         WordIndex = Random.Range(0, textAssetsLoader.wordList.Count);
         gameStartTime = System.DateTime.Now.ToBinary();
         RequestSerialization();
+
+        audioSource.PlayOneShot(gameStartSound);
     }
 
     public void OnInputKey(char c)
@@ -233,7 +248,11 @@ public class GameManager : UdonSharpBehaviour
         remainingTime.text = "残り時間 " + remaining + "秒";
         if (remaining <= 0)
         {
+            audioSource.PlayOneShot(gameEndSound);
+
             gameStartTime = 0;
+            noMissCount = 0;
+            limitTime = 60;
             remainingTime.text = "終了！";
             originalWord.text = "今日の収入: " + revenue + "円";
             romajiWord.text = "";
@@ -241,8 +260,6 @@ public class GameManager : UdonSharpBehaviour
             else
             {
             revenue = -10000;
-            noMissCount = 0;
-            limitTime = 60;
         }
     }
 
@@ -252,15 +269,18 @@ public class GameManager : UdonSharpBehaviour
         if (noMissCount == 10)
         {
             limitTime += 1;
+            audioSource.PlayOneShot(extendTimeSound);
         }
         else if (noMissCount == 20)
         {
             limitTime += 2;
+            audioSource.PlayOneShot(extendTimeSound);
         }
         else if (noMissCount == 30)
         {
             limitTime += 3;
             noMissCount = 0;
+            audioSource.PlayOneShot(extendTimeSound);
         }
     }
 
