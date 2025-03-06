@@ -101,11 +101,10 @@ public class TextAssetsLoader : UdonSharpBehaviour
             {
                 // ワードリスト
                 string[] parts = _wordListLines[_wordListLoadedIndex].Split(',');
-                DataList data = new DataList();
-                data.Capacity = 2;
-                data.Add(parts[1]);
-                data.Add(GenerateRomajiTokens(parts[0].TrimEnd()));
-                wordList.Add(new DataToken(data));
+                wordList.Add(new DataList(new DataToken[2] {
+                    parts[1],
+                    GenerateRomajiTokens(parts[0].TrimEnd())
+                }));
                 _wordListLoadedIndex++;
             }
             else
