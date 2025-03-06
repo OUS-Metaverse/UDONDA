@@ -93,6 +93,7 @@ public class GameManager : UdonSharpBehaviour
         OriginalWordText = "今日の収入: " + revenue + "円";
         RomajiWordText = "";
         
+        Networking.SetOwner(Networking.LocalPlayer, leaderboard.gameObject);
         leaderboard.AddScore(Networking.LocalPlayer.displayName, revenue);
 
         RequestSerialization();
