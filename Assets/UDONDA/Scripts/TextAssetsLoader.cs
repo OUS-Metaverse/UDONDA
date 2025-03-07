@@ -45,7 +45,8 @@ public class TextAssetsLoader : UdonSharpBehaviour
     /// <remarks>
     /// ワードリストの各要素は、以下のような構造を持つ。
     /// <code>
-    /// [0]: オリジナルのかな
+    /// [0]: 原文
+    /// [1]: ふりがな
     /// [1]: トークンのリスト
     /// </code>
     /// トークンのリストの各要素は通常ローマ字の候補リストを持つが、
@@ -101,11 +102,11 @@ public class TextAssetsLoader : UdonSharpBehaviour
             {
                 // ワードリスト
                 string[] parts = _wordListLines[_wordListLoadedIndex].Split(',');
-                DataList data = new DataList();
-                data.Capacity = 2;
-                data.Add(parts[1]);
-                data.Add(GenerateRomajiTokens(parts[0].TrimEnd()));
-                wordList.Add(new DataToken(data));
+                wordList.Add(new DataList(new DataToken[3] {
+                    parts[1],
+                    parts[0].Replace("\\", "").Replace(";", ""),
+                    GenerateRomajiTokens(parts[0].TrimEnd())
+                }));
                 _wordListLoadedIndex++;
             }
             else

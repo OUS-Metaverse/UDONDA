@@ -2720,6 +2720,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4194304
   keyboard: {fileID: 5099369277796447945}
+  gameManager: {fileID: 0}
   _trackingTarget: 0
   _spaceOffset: 0.05
   _RotationOffset: 40
@@ -14250,6 +14251,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4194304
   keyboard: {fileID: 5099369277796447945}
+  gameManager: {fileID: 0}
   _trackingTarget: 1
   _spaceOffset: 0.05
   _RotationOffset: 40

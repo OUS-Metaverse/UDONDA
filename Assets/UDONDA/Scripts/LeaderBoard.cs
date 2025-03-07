@@ -6,7 +6,8 @@ using VRC.SDK3.Data;
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class LeaderBoard : UdonSharpBehaviour
 {
-    TMP_Text leaderboard;
+    [SerializeField] TMP_Text playerNameText;
+    [SerializeField] TMP_Text scoreText;
     
     DataList leaderboardData = new DataList();
     [UdonSynced, FieldChangeCallback(nameof(SerializedLeaderboardData))] string _serializedLeaderboardData;
@@ -29,11 +30,6 @@ public class LeaderBoard : UdonSharpBehaviour
         }
     }
 
-    void Start()
-    {
-        leaderboard = GetComponent<TMP_Text>();
-    }
-
     public void AddScore(string name, int score)
     {
         DataList scoreData = new DataList(new DataToken[2] { name, score });
@@ -54,9 +50,9 @@ public class LeaderBoard : UdonSharpBehaviour
             }
         }
 
-        if (leaderboardData.Count > 10)
+        if (leaderboardData.Count > 13)
         {
-            leaderboardData.RemoveAt(10);
+            leaderboardData.RemoveAt(13);
         }
 
         UpdateLeaderboardText();
@@ -74,11 +70,12 @@ public class LeaderBoard : UdonSharpBehaviour
 
     private void UpdateLeaderboardText()
     {
-        leaderboard.text = "";
+        playerNameText.text = "";
         for (int i = 0; i < leaderboardData.Count; i++)
         {
             DataList data = leaderboardData[i].DataList;
-            leaderboard.text += $"{i + 1}. {data[0].String} {(int)data[1].Number}円\n";
+            playerNameText.text += $"{i + 1}. {data[0].String}\n";
+            scoreText.text += $"{(int)data[1].Number}本\n";
         }
     }
 }
