@@ -8,6 +8,7 @@ using VRC.SDKBase;
 public class GameManager : UdonSharpBehaviour
 {
     [SerializeField] TMP_Text remainingTime;
+    [SerializeField] TMP_Text originalKana;
     [SerializeField] TMP_Text originalWord;
     [SerializeField] TMP_Text romajiWord;
     [SerializeField] LeaderBoard leaderboard;
@@ -18,18 +19,25 @@ public class GameManager : UdonSharpBehaviour
     [UdonSynced] long gameStartTime;
     [UdonSynced] int limitTime;
 
-    int revenue;
-
+    int score;
     int noMissCount;
+    int totalStrokeCount;
+    int totalMissCount;
 
     DataList wordData;
+
+    [UdonSynced, FieldChangeCallback(nameof(OriginalKanaText))] string _originalKanaText;
+    string OriginalKanaText
+    {
+        get => _originalKanaText;
+        set
+        {
+            _originalKanaText = value;
+            originalKana.text = _originalKanaText;
+        }
+    }
+
     [UdonSynced, FieldChangeCallback(nameof(OriginalWordText))] string _originalWordText;
-    /// <summary>
-    /// オリジナルの単語の表示文字列
-    /// </summary>
-    /// <remarks>
-    /// setterで表示を更新する
-    /// </remarks>
     string OriginalWordText
     {
         get => _originalWordText;
@@ -42,12 +50,6 @@ public class GameManager : UdonSharpBehaviour
     
     string inputWord = "";
     [UdonSynced, FieldChangeCallback(nameof(RomajiWordText))] string _romajiWordText = "";
-    /// <summary>
-    /// ローマ字の表示文字列
-    /// </summary>
-    /// <remarks>
-    /// setterで表示を更新する
-    /// </remarks>
     string RomajiWordText
     {
         get => _romajiWordText;
@@ -74,7 +76,7 @@ public class GameManager : UdonSharpBehaviour
         // 初期化
         gameStartTime = System.DateTime.Now.ToBinary();
         limitTime = 60;
-        revenue = -10000;
+        score = 0;
         noMissCount = 0;
         inputWord = "";
         SelectNextWord();
@@ -90,11 +92,22 @@ public class GameManager : UdonSharpBehaviour
         laserPointerR.SetActive(false);
         
         gameStartTime = 0;
-        OriginalWordText = "今日の収入: " + revenue + "円";
-        RomajiWordText = "";
+
+        if (score > 30)
+            OriginalKanaText = "とんでもない大食い";
+        else if (score > 20)
+            OriginalKanaText = "すごい！";
+        else if (score > 10)
+            OriginalKanaText = "なかなか食べますね…";
+        else
+            OriginalKanaText = "かわいい";
+
+        OriginalWordText = score + "本食べた！";
+
+        RomajiWordText = $"ミスタイプ: {totalMissCount}回 平均タイプ数: {(totalStrokeCount - totalMissCount) / (float)limitTime:N1}回/秒";
         
         Networking.SetOwner(Networking.LocalPlayer, leaderboard.gameObject);
-        leaderboard.AddScore(Networking.LocalPlayer.displayName, revenue);
+        leaderboard.AddScore(Networking.LocalPlayer.displayName, score);
 
         RequestSerialization();
         soundManager.PlayGameEndSound();
@@ -105,14 +118,14 @@ public class GameManager : UdonSharpBehaviour
         if (gameStartTime == 0 || !Networking.IsOwner(gameObject))
             return;
 
-        DataList result = RomajiValidator.Validate(wordData[1].DataList, inputWord + c);
+        DataList result = RomajiValidator.Validate(wordData[2].DataList, inputWord + c);
         if (result[0].Boolean)
         {
             inputWord += c;
             UpdateNoMissCount();
             if (inputWord == result[1].String)
             {
-                revenue += 100;
+                score += 1;
                 inputWord = "";
                 SelectNextWord();
 
@@ -128,6 +141,7 @@ public class GameManager : UdonSharpBehaviour
         else
         {
             noMissCount = 0;
+            totalMissCount++;
             soundManager.PlayMissSound();
         }
 
@@ -154,14 +168,16 @@ public class GameManager : UdonSharpBehaviour
     private void SelectNextWord()
     {
         wordData = textAssetsLoader.wordList[Random.Range(0, textAssetsLoader.wordList.Count)].DataList;
+        OriginalKanaText = wordData[1].String;
         OriginalWordText = wordData[0].String;
-        DataList result = RomajiValidator.Validate(wordData[1].DataList, "");
+        DataList result = RomajiValidator.Validate(wordData[2].DataList, "");
         RomajiWordText = result[1].String;
     }
 
     private void UpdateNoMissCount()
     {
         noMissCount++;
+        totalStrokeCount++;
         if (noMissCount == 10)
         {
             limitTime += 1;
