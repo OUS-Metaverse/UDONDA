@@ -41,6 +41,7 @@ public static class RomajiValidator
                 }
                 else
                 {
+                    // 再帰的にローマ字の候補を検証する
                     DataList result = Validate(tokenData[1].DataList, inputRomaji.Substring(headIndex));
                     if (result[0].Boolean)
                     {
@@ -51,55 +52,59 @@ public static class RomajiValidator
                         isInputValid = false;
                     }
                 }
+                continue;
             }
-            else
+            
+            // ローマ字の各候補にマッチするかどうかを判定する
+            bool isMatch = false;
+            if (tokenData[0].String == "n")
             {
-                // ローマ字の各候補にマッチするかどうかを判定する
-                bool isMatch = false;
-                if (tokenData[0].String == "n")
+                // 先頭の候補が"n"の場合（＝「ん」のトークンかつ、単体の"n"が許容されているトークン）は、
+                // まず"n"以外の候補に完全一致するか検証する
+                for (int j = 1; j < tokenData.Count; j++)
                 {
-                    // 先頭の候補が"n"の場合（＝「ん」のトークン）は、
-                    // まず"n"以外の候補に完全一致するか検証する
-                    for (int j = 1; j < tokenData.Count; j++)
+                    if (IsStrictMatch(tokenData[j].String, inputRomaji, headIndex))
                     {
-                        if (IsStrictMatch(tokenData[j].String, inputRomaji, headIndex))
-                        {
-                            candidateBuilder.Append(tokenData[j].String);
-                            isMatch = true;
-                            break;
-                        }
-                    }
-                    // "n"以外の候補に完全一致しなかった場合は、
-                    // 次が "n" と接続しないトークンであれば"n"を許容する
-                    if (!isMatch && inputRomaji[headIndex] == 'n'
-                        && wordTokens.TryGetValue(i + 1, out DataToken nextToken)
-                        && !"aiueon".Contains(nextToken.DataList[0].String[0])
-                    )
-                    {
-                        candidateBuilder.Append("n");
+                        candidateBuilder.Append(tokenData[j].String);
                         isMatch = true;
-                    }
-                }
-                else
-                {
-                    for (int j = 0; j < tokenData.Count; j++)
-                    {
-                        if (IsMatch(tokenData[j].String, inputRomaji, headIndex))
-                        {
-                            candidateBuilder.Append(tokenData[j].String);
-                            isMatch = true;
-                            break;
-                        }
+                        break;
                     }
                 }
                 if (!isMatch)
                 {
-                    isInputValid = false;
+                    // "n"を許容する
+                    if (inputRomaji[headIndex] == 'n')
+                    {
+                        candidateBuilder.Append("n");
+                        isMatch = true;
+                    }
+                    // "xn" として入力された場合も許容する
+                    else if (IsMatch("xn", inputRomaji, headIndex))
+                    {
+                        candidateBuilder.Append("xn");
+                        isMatch = true;
+                    }
                 }
+            }
+            else
+            {
+                for (int j = 0; j < tokenData.Count; j++)
+                {
+                    if (IsMatch(tokenData[j].String, inputRomaji, headIndex))
+                    {
+                        candidateBuilder.Append(tokenData[j].String);
+                        isMatch = true;
+                        break;
+                    }
+                }
+            }
+            if (!isMatch)
+            {
+                isInputValid = false;
             }
         }
 
-        return new DataList(new DataToken[2] { isInputValid, candidateBuilder.ToString() });;
+        return new DataList(new DataToken[2] { isInputValid, candidateBuilder.ToString() });
     }
 
     /// <summary>
