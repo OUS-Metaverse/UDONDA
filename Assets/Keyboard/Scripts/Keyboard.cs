@@ -9,7 +9,8 @@ public class Keyboard : UdonSharpBehaviour
     [SerializeField] private GameObject keyboard1;
     [SerializeField] private GameObject keyboard2;
     [SerializeField] private GameManager gameManager;
-    [SerializeField] private int _waitFrame = 10;
+    [SerializeField] private int _waitMs = 700;
+    private long _standbyTime = 0;
     
     public bool isDesktopMode = false;
     private bool shiftMode = false;
@@ -17,12 +18,19 @@ public class Keyboard : UdonSharpBehaviour
         get => shiftMode;
         set {
             shiftMode = value;
-            keyboard1.SetActive(shiftMode);
-            keyboard2.SetActive(!shiftMode);
+            keyboard1.SetActive(!shiftMode);
+            keyboard2.SetActive(shiftMode);
         }
     }
     private bool shiftLock = false;
-    private bool standbyDoubleTap = false;
+    private bool _standbyDoubleTap = false;
+    private bool StandbyDoubleTap {
+        get => _standbyDoubleTap;
+        set {
+            _standbyDoubleTap = value;
+            _standbyTime = _standbyDoubleTap ? System.DateTime.Now.Millisecond : 0;
+        }
+    }
 
     void Update()
     {
@@ -36,15 +44,10 @@ public class Keyboard : UdonSharpBehaviour
         }
         else
         {
-            if (!standbyDoubleTap) return;
-            if (_waitFrame > 0)
+            if (!StandbyDoubleTap) return;
+            if (System.DateTime.Now.Millisecond - _standbyTime > _waitMs)
             {
-                _waitFrame--;
-            }
-            else
-            {
-                standbyDoubleTap = false;
-                _waitFrame = 10;
+                StandbyDoubleTap = false;
             }
         }
     }
@@ -54,6 +57,7 @@ public class Keyboard : UdonSharpBehaviour
         if (s == "↑" || s == "↓")
         {
             ToggleKeyboard();
+            return;
         }
         else if (s == "BackSpace")
         {
@@ -72,16 +76,18 @@ public class Keyboard : UdonSharpBehaviour
 
     public void ToggleKeyboard()
     {
-        if (standbyDoubleTap)
+        if (StandbyDoubleTap)
         {
-            if (!keyboard2.activeSelf) return;
-            standbyDoubleTap = false;
+            StandbyDoubleTap = false;
             ShiftMode = true;
             shiftLock = true;
             return;
         }
         ShiftMode = !ShiftMode;
-        standbyDoubleTap = true;
+        if (ShiftMode)
+        {
+            StandbyDoubleTap = true;
+        }
         shiftLock = false;
     }
 
