@@ -16,7 +16,6 @@ public class LaserPointer : UdonSharpBehaviour
     [SerializeField] private LayerMask collideLayer;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private Keyboard keyboard;
-    [SerializeField] private GameManager gameManager;
     [SerializeField] private TrackingTarget _trackingTarget;
     [SerializeField] private float _spaceOffset = 0.05f;
     [SerializeField] private float _RotationOffset = 40.0f;
@@ -54,10 +53,6 @@ public class LaserPointer : UdonSharpBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 100.0f, collideLayer, queryTriggerInteraction: QueryTriggerInteraction.Collide))
         {
-            Debug.Log($"name:{hit.collider.gameObject.name}");
-            Debug.Log($"hitlayer:{hit.collider.gameObject.layer}");
-            Debug.Log($"layermask:{layerMask}");
-            Debug.Log($"isBG:{((1 << hit.collider.gameObject.layer) & layerMask.value) == 0}");
             Vector3 hitPoint = hit.point;
             Vector3[] positions = new Vector3[]
             {
@@ -74,22 +69,7 @@ public class LaserPointer : UdonSharpBehaviour
             var inputTrigger = Input.GetAxis(_trackingTarget == TrackingTarget.LeftHand ? "Oculus_CrossPlatform_PrimaryIndexTrigger" : "Oculus_CrossPlatform_SecondaryIndexTrigger");
             if (inputTrigger > 0.75f && !_ontrigger)
             {
-                if (_pointKeyName == "↑" || _pointKeyName == "↓")
-                {
-                    keyboard.ToggleKeyboard();
-                }
-                else if (_pointKeyName == "BackSpace")
-                {
-                    gameManager.OnInputKey('\b');
-                }
-                else if (_pointKeyName == "␣")
-                {
-                    gameManager.OnInputKey(' ');
-                }
-                else
-                {
-                    gameManager.OnInputKey(_pointKeyName[0]);
-                }
+                keyboard.OnInteractKey(_pointKeyName);
                 _ontrigger = true;
             }
             if (inputTrigger < 0.15f)

@@ -12,25 +12,9 @@ public class DesktopMode : UdonSharpBehaviour
         gameObject.SetActive(!Networking.LocalPlayer.IsUserInVR());
     }
 
-    public override void Interact()
+    public void AttachPlayer()
     {
         Networking.LocalPlayer.UseAttachedStation();
-    }
-
-    public override void OnStationEntered(VRCPlayerApi player)
-    {
-        if (player.isLocal)
-        {
-            keyboard.isDesktopMode = true;
-        }
-    }
-
-    public override void OnStationExited(VRCPlayerApi player)
-    {
-        if (player.isLocal)
-        {
-            keyboard.isDesktopMode = false;
-        }
     }
 
     void Update()
