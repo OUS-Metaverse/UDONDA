@@ -1161,9 +1161,9 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 0
   MinDistance: 0.6
-  MaxDistance: 5
+  MaxDistance: 2.5
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 1
@@ -1184,11 +1184,11 @@ AudioSource:
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -3.3333895
+      outSlope: -3.3333895
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.06705552
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -1212,8 +1212,17 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 0
+      time: 0.09947586
+      value: 0.7157569
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.79319364
+      value: 1.0013709
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1263,7 +1272,7 @@ MonoBehaviour:
   keyStrokeSound: {fileID: 8300000, guid: 1458d7b30fe399640aa74828c4287dd7, type: 3}
   missSound: {fileID: 8300000, guid: 8459c6cd943db4f41b2d67a387550afc, type: 3}
   correctSound: {fileID: 8300000, guid: 7eec230eecd00384eaa9e702b45dc5ea, type: 3}
-  extendTimeSound: {fileID: 8300000, guid: 5c410aef3ed326d4c907f4e07d4d1cd7, type: 3}
+  extendTimeSound: {fileID: 8300000, guid: 73cd2405197c55d4bb1f6b4ae3f4cfa7, type: 3}
   gameStartSound: {fileID: 8300000, guid: a9bcd4cefa8a0d14daf2a0c7ea40a705, type: 3}
   gameEndSound: {fileID: 8300000, guid: 4cb41c8387f67a14299f765c9b164d87, type: 3}
 --- !u!114 &5984726093541506365
@@ -1781,7 +1790,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0.657, y: 0.69}
-  m_SizeDelta: {x: 450, y: 700}
+  m_SizeDelta: {x: 450, y: 730}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &208232952130931742
 Canvas:
@@ -2358,14 +2367,14 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 5902089380470415302, guid: 0e7f386308c7f514ba4ce7c09812015d, type: 3}
-    - target: {fileID: 6096348368038389463, guid: 0e7f386308c7f514ba4ce7c09812015d, type: 3}
-      propertyPath: m_Name
-      value: DesktopMode
-      objectReference: {fileID: 0}
     - target: {fileID: 7797251840996922699, guid: 0e7f386308c7f514ba4ce7c09812015d, type: 3}
       propertyPath: StartButton
       value: 
       objectReference: {fileID: 8688931772873930410}
+    - target: {fileID: 7797251840996922699, guid: 0e7f386308c7f514ba4ce7c09812015d, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 5988573657335928827}
     - target: {fileID: 7797251840996922699, guid: 0e7f386308c7f514ba4ce7c09812015d, type: 3}
       propertyPath: serializationData.Prefab
       value: 
