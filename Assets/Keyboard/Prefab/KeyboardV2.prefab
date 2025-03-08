@@ -18387,6 +18387,7 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 5509509761065780602}
   keyboard: {fileID: 5099369277796447945}
+  gameManager: {fileID: 0}
   StartButton: {fileID: 0}
 --- !u!114 &5509509761065780602
 MonoBehaviour:

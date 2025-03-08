@@ -274,7 +274,7 @@ GameObject:
   - component: {fileID: 8415852785501917142}
   - component: {fileID: 5273588517093301855}
   - component: {fileID: 6982793269879771854}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -849,7 +849,7 @@ GameObject:
   - component: {fileID: 5059340796573754316}
   - component: {fileID: 1239677272016148034}
   - component: {fileID: 6916310644806522387}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Credits
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1197,8 +1197,17 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 0
+      time: 0.2041893
+      value: 0.6702489
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1.0021734
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1212,17 +1221,8 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.09947586
-      value: 0.7157569
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.79319364
-      value: 1.0013709
+      time: 0
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1763,7 +1763,7 @@ GameObject:
   - component: {fileID: 5787080454184984548}
   - component: {fileID: 1901644957695165485}
   - component: {fileID: 3354175582317491361}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: GameDescription
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1892,7 +1892,7 @@ GameObject:
   - component: {fileID: 2302555906599291526}
   - component: {fileID: 6215328314839152771}
   - component: {fileID: 3256146035476011147}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2260,11 +2260,19 @@ PrefabInstance:
     - target: {fileID: 5342667653314797044, guid: e46f21e0f8238214098b277924e610e6, type: 3}
       propertyPath: m_OnSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 104598624638082759}
+      objectReference: {fileID: 3335828243685958503}
     - target: {fileID: 5342667653314797044, guid: e46f21e0f8238214098b277924e610e6, type: 3}
       propertyPath: m_OnSelect.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 3335828243685958503}
+      objectReference: {fileID: 104598624638082759}
+    - target: {fileID: 5342667653314797044, guid: e46f21e0f8238214098b277924e610e6, type: 3}
+      propertyPath: m_OnSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: AttachPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342667653314797044, guid: e46f21e0f8238214098b277924e610e6, type: 3}
+      propertyPath: m_OnSelect.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_StringArgument
+      value: GameStart
+      objectReference: {fileID: 0}
     - target: {fileID: 5964708313813100129, guid: e46f21e0f8238214098b277924e610e6, type: 3}
       propertyPath: m_Name
       value: Buttons

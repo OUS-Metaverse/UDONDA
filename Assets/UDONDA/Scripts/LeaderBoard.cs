@@ -50,9 +50,9 @@ public class LeaderBoard : UdonSharpBehaviour
             }
         }
 
-        if (leaderboardData.Count > 13)
+        if (leaderboardData.Count > 17)
         {
-            leaderboardData.RemoveAt(13);
+            leaderboardData.RemoveAt(17);
         }
 
         UpdateLeaderboardText();
