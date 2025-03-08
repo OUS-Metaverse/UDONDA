@@ -22,6 +22,7 @@ public class LaserPointer : UdonSharpBehaviour
     [SerializeField] private bool _debug = false;
     private LineRenderer lineRenderer;
     private bool _ontrigger = false;
+    private float _lineWidth = 0.005f;
     private VRCPlayerApi _attachedPlayer;
     void Start()
     {
@@ -30,8 +31,8 @@ public class LaserPointer : UdonSharpBehaviour
         transform.localPosition = new Vector3(_spaceOffset, 0.0f, 0.0f);
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
-        lineRenderer.startWidth = 0.01f;
-        lineRenderer.endWidth = 0.01f;
+        lineRenderer.startWidth = _lineWidth;
+        lineRenderer.endWidth = _lineWidth;
     }
     void Update()
     {
