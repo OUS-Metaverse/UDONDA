@@ -22,7 +22,7 @@ public class GameManager : UdonSharpBehaviour
 
     DateTime gameStartTime;
     [UdonSynced, FieldChangeCallback(nameof(GameStarted))] bool _gameStarted;
-    bool GameStarted
+    public bool GameStarted
     {
         get => _gameStarted;
         set {

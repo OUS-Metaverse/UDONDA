@@ -7,6 +7,7 @@ using VRC.SDKBase;
 public class DesktopMode : UdonSharpBehaviour
 {
     [SerializeField] private Keyboard keyboard;
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private GameObject StartButton;
     private bool _buttonActive = true;
     private bool ButtonActive {
@@ -25,6 +26,7 @@ public class DesktopMode : UdonSharpBehaviour
 
     public void AttachPlayer()
     {
+        if (gameManager.GameStarted) return;
         Networking.LocalPlayer.UseAttachedStation();
         isAttached = true;
     }
