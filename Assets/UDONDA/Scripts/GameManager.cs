@@ -16,7 +16,17 @@ public class GameManager : UdonSharpBehaviour
     [SerializeField] GameObject laserPointerL, laserPointerR;
     [SerializeField] SoundManager soundManager;
 
-    [UdonSynced] long gameStartTime;
+    [UdonSynced, FieldChangeCallback(nameof(GameStartTime))] long _gameStartTime;
+    long GameStartTime
+    {
+        get => _gameStartTime;
+        set {
+            _gameStartTime = value;
+            
+            if (_gameStartTime == 0)
+                remainingTime.text = "";
+        }
+    }
     [UdonSynced] int limitTime;
 
     int score;
@@ -62,7 +72,7 @@ public class GameManager : UdonSharpBehaviour
 
     public void GameStart()
     {
-        if (textAssetsLoader.state != LoadingState.Loaded || gameStartTime != 0)
+        if (textAssetsLoader.state != LoadingState.Loaded || GameStartTime != 0)
             return;
             
         Networking.SetOwner(Networking.LocalPlayer, gameObject);
@@ -74,10 +84,12 @@ public class GameManager : UdonSharpBehaviour
         }
 
         // 初期化
-        gameStartTime = System.DateTime.Now.ToBinary();
+        GameStartTime = System.DateTime.Now.ToBinary();
         limitTime = 60;
         score = 0;
         noMissCount = 0;
+        totalStrokeCount = 0;
+        totalMissCount = 0;
         inputWord = "";
         SelectNextWord();
 
@@ -91,7 +103,7 @@ public class GameManager : UdonSharpBehaviour
         laserPointerL.SetActive(false);
         laserPointerR.SetActive(false);
         
-        gameStartTime = 0;
+        GameStartTime = 0;
 
         if (score > 30)
             OriginalKanaText = "とんでもない大食い";
@@ -115,7 +127,7 @@ public class GameManager : UdonSharpBehaviour
 
     public void OnInputKey(char c)
     {
-        if (gameStartTime == 0 || !Networking.IsOwner(gameObject))
+        if (GameStartTime == 0 || !Networking.IsOwner(gameObject))
             return;
 
         DataList result = RomajiValidator.Validate(wordData[2].DataList, inputWord + c);
@@ -150,19 +162,14 @@ public class GameManager : UdonSharpBehaviour
 
     void Update()
     {
-        if (gameStartTime == 0)
+        if (GameStartTime == 0)
             return;
         
-        int remaining = (int)(System.DateTime.FromBinary(gameStartTime) - System.DateTime.Now).TotalSeconds + limitTime;
+        int remaining = (int)(System.DateTime.FromBinary(GameStartTime) - System.DateTime.Now).TotalSeconds + limitTime;
         remainingTime.text = "残り時間 " + remaining + "秒";
 
-        if (remaining <= 0)
-        {
-            remainingTime.text = "終了！";
-
-            if (Networking.IsOwner(gameObject))
-                GameEnd();
-        }
+        if (remaining <= 0 && Networking.IsOwner(gameObject))
+            GameEnd();
     }
 
     private void SelectNextWord()

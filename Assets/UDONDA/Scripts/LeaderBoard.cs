@@ -71,6 +71,7 @@ public class LeaderBoard : UdonSharpBehaviour
     private void UpdateLeaderboardText()
     {
         playerNameText.text = "";
+        scoreText.text = "";
         for (int i = 0; i < leaderboardData.Count; i++)
         {
             DataList data = leaderboardData[i].DataList;
