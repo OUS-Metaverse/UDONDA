@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Data;
@@ -15,16 +16,26 @@ public class GameManager : UdonSharpBehaviour
     [SerializeField] TextAssetsLoader textAssetsLoader;
     [SerializeField] GameObject laserPointerL, laserPointerR;
     [SerializeField] SoundManager soundManager;
+    [SerializeField] BGMManager bgmManager;
 
-    [UdonSynced, FieldChangeCallback(nameof(GameStartTime))] long _gameStartTime;
-    long GameStartTime
+    DateTime gameStartTime;
+    [UdonSynced, FieldChangeCallback(nameof(GameStarted))] bool _gameStarted;
+    bool GameStarted
     {
-        get => _gameStartTime;
+        get => _gameStarted;
         set {
-            _gameStartTime = value;
+            _gameStarted = value;
             
-            if (_gameStartTime == 0)
-                remainingTime.text = "";
+            if (_gameStarted)
+            {
+                gameStartTime = DateTime.Now;
+                soundManager.PlayGameStartSound();
+            }
+            else
+            {
+                remainingTime.text = "終了！";
+                soundManager.PlayGameEndSound();
+            }
         }
     }
     [UdonSynced] int limitTime;
@@ -72,7 +83,7 @@ public class GameManager : UdonSharpBehaviour
 
     public void GameStart()
     {
-        if (textAssetsLoader.state != LoadingState.Loaded || GameStartTime != 0)
+        if (textAssetsLoader.state != LoadingState.Loaded || GameStarted)
             return;
             
         Networking.SetOwner(Networking.LocalPlayer, gameObject);
@@ -83,8 +94,10 @@ public class GameManager : UdonSharpBehaviour
             laserPointerR.SetActive(true);
         }
 
+        bgmManager.FadeOutBGM();
+
         // 初期化
-        GameStartTime = System.DateTime.Now.ToBinary();
+        GameStarted = true;
         limitTime = 60;
         score = 0;
         noMissCount = 0;
@@ -94,7 +107,6 @@ public class GameManager : UdonSharpBehaviour
         SelectNextWord();
 
         RequestSerialization();
-        soundManager.PlayGameStartSound();
     }
 
     public void GameEnd()
@@ -102,8 +114,10 @@ public class GameManager : UdonSharpBehaviour
         // レーザーポインターを非表示にする
         laserPointerL.SetActive(false);
         laserPointerR.SetActive(false);
+
+        bgmManager.FadeInBGM();
         
-        GameStartTime = 0;
+        GameStarted = false;
 
         if (score > 30)
             OriginalKanaText = "とんでもない大食い";
@@ -122,12 +136,11 @@ public class GameManager : UdonSharpBehaviour
         leaderboard.AddScore(Networking.LocalPlayer.displayName, score);
 
         RequestSerialization();
-        soundManager.PlayGameEndSound();
     }
 
     public void OnInputKey(char c)
     {
-        if (GameStartTime == 0 || !Networking.IsOwner(gameObject))
+        if (!GameStarted || !Networking.IsOwner(gameObject))
             return;
 
         DataList result = RomajiValidator.Validate(wordData[2].DataList, inputWord + c);
@@ -162,11 +175,11 @@ public class GameManager : UdonSharpBehaviour
 
     void Update()
     {
-        if (GameStartTime == 0)
+        if (!GameStarted)
             return;
         
-        int remaining = (int)(System.DateTime.FromBinary(GameStartTime) - System.DateTime.Now).TotalSeconds + limitTime;
-        remainingTime.text = "残り時間 " + remaining + "秒";
+        double remaining = (int)(gameStartTime - DateTime.Now).TotalSeconds + limitTime;
+        remainingTime.text = $"残り時間 {remaining}秒";
 
         if (remaining <= 0 && Networking.IsOwner(gameObject))
             GameEnd();
@@ -174,7 +187,7 @@ public class GameManager : UdonSharpBehaviour
 
     private void SelectNextWord()
     {
-        wordData = textAssetsLoader.wordList[Random.Range(0, textAssetsLoader.wordList.Count)].DataList;
+        wordData = textAssetsLoader.wordList[UnityEngine.Random.Range(0, textAssetsLoader.wordList.Count)].DataList;
         OriginalKanaText = wordData[1].String;
         OriginalWordText = wordData[0].String;
         DataList result = RomajiValidator.Validate(wordData[2].DataList, "");

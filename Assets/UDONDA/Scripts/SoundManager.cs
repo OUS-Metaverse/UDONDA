@@ -35,7 +35,7 @@ public class SoundManager : UdonSharpBehaviour
 
     public void PlayExtendTimeSound()
     {
-        _audioSource.PlayOneShot(extendTimeSound);
+        _audioSource.PlayOneShot(extendTimeSound, 0.2f);
     }
 
     public void PlayGameStartSound()
