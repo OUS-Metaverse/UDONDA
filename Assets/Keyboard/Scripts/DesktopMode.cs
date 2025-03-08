@@ -29,19 +29,19 @@ public class DesktopMode : UdonSharpBehaviour
         isAttached = true;
     }
 
+    public void DetachPlayer()
+    {
+        if (!isAttached) return;
+        Networking.LocalPlayer.TeleportTo(transform.position, transform.rotation);
+        ButtonActive = false;
+        isAttached = false;
+    }
+
     void Update()
     {
         if (!ButtonActive)
         {
             ButtonActive = true;
-        }
-        if (!keyboard.isDesktopMode) return;
-        if (!isAttached) return;
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            Networking.LocalPlayer.TeleportTo(transform.position, transform.rotation);
-            ButtonActive = false;
-            isAttached = false;
         }
     }
 }

@@ -15,8 +15,10 @@ public class GameManager : UdonSharpBehaviour
     [SerializeField] LeaderBoard leaderboard;
     [SerializeField] TextAssetsLoader textAssetsLoader;
     [SerializeField] GameObject laserPointerL, laserPointerR;
+    [SerializeField] DesktopMode desktopMode;
     [SerializeField] SoundManager soundManager;
     [SerializeField] BGMManager bgmManager;
+    [SerializeField] ButtonManager buttonManager;
 
     DateTime gameStartTime;
     [UdonSynced, FieldChangeCallback(nameof(GameStarted))] bool _gameStarted;
@@ -106,6 +108,8 @@ public class GameManager : UdonSharpBehaviour
         inputWord = "";
         SelectNextWord();
 
+        buttonManager.LeaveButtonSetActive(true);
+
         RequestSerialization();
     }
 
@@ -118,6 +122,10 @@ public class GameManager : UdonSharpBehaviour
         bgmManager.FadeInBGM();
         
         GameStarted = false;
+
+        buttonManager.LeaveButtonSetActive(false);
+        if (!Networking.LocalPlayer.IsUserInVR())
+            desktopMode.DetachPlayer();
 
         if (score > 30)
             OriginalKanaText = "とんでもない大食い";
